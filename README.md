@@ -2,20 +2,11 @@
 
 API RESTful de autenticación de usuarios utilizando JSON Web Tokens (JWT) y hashing de contraseñas con bcrypt.
 
-## Características
-
-- Registro de usuarios con validación
-- Autenticación mediante JWT
-- Hashing de contraseñas con bcrypt
-- Rutas protegidas con middleware de autenticación
-- Manejo de errores robusto
-- Base de datos en memoria (fácil de migrar a BD real)
-
 ## Requisitos Previos
 
-- Node.js (v14 o superior)
+- Node.js
 - npm o yarn
-- Postman (para pruebas)
+- Postman
 
 ## Instalación
 
@@ -25,15 +16,14 @@ npm install
 ```
 
 2. Configurar variables de entorno:
-   - El archivo `.env` ya está creado
-   - **IMPORTANTE**: Cambiar `JWT_SECRET` en producción
-
-3. Iniciar el servidor:
+   - Crear un archivo .env con las siguientes variables:
 ```bash
-npm start
+    JWT_SECRET=replace_with_a_strong_secret
+    JWT_EXPIRES_IN=24h
+    PORT=3000
 ```
+3. Iniciar el servidor:
 
-O para desarrollo con auto-reload:
 ```bash
 npm run dev
 ```
@@ -119,10 +109,6 @@ El servidor se ejecutará en `http://localhost:3000`
 - **GET** `/api/users`
 - **Requiere autenticación** (Bearer Token)
 
-**Headers:**
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
 
 **Respuesta exitosa (200):**
 ```json
@@ -180,37 +166,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
      - Key: `Authorization`
      - Value: `Bearer TU_TOKEN_AQUI`
 
-## Seguridad
-
-- Contraseñas hasheadas con bcrypt (salt rounds: 10)
-- JWT con expiración configurable (24h por defecto)
-- Validación de datos de entrada
-- Contraseñas nunca se devuelven en las respuestas
-- Protección contra usuarios duplicados
-
 ## Base de Datos
 
-Actualmente usa una base de datos en memoria para demostración. Para producción, se puede migrar fácilmente a:
-
-## Estructura del Proyecto
-
-```
-JWT login/
-├── config/
-│   └── db.js                 # Base de datos simulada
-├── controllers/
-│   ├── authController.js     # Lógica de autenticación
-│   └── userController.js     # Lógica de usuarios
-├── middleware/
-│   └── authMiddleware.js     # Middleware de autenticación JWT
-├── routes/
-│   ├── authRoutes.js         # Rutas de autenticación
-│   └── userRoutes.js         # Rutas de usuarios
-├── utils/
-│   └── auth.js               # Utilidades de autenticación
-├── .env                      # Variables de entorno
-├── .gitignore
-├── package.json
-├── server.js                 # Punto de entrada
-└── README.md
-```
+Actualmente usa una base de datos en memoria para demostración.
