@@ -2,22 +2,22 @@
 
 API RESTful de autenticación de usuarios utilizando JSON Web Tokens (JWT) y hashing de contraseñas con bcrypt.
 
-## 🚀 Características
+## Características
 
-- ✅ Registro de usuarios con validación
-- ✅ Autenticación mediante JWT
-- ✅ Hashing de contraseñas con bcrypt
-- ✅ Rutas protegidas con middleware de autenticación
-- ✅ Manejo de errores robusto
-- ✅ Base de datos en memoria (fácil de migrar a BD real)
+- Registro de usuarios con validación
+- Autenticación mediante JWT
+- Hashing de contraseñas con bcrypt
+- Rutas protegidas con middleware de autenticación
+- Manejo de errores robusto
+- Base de datos en memoria (fácil de migrar a BD real)
 
-## 📋 Requisitos Previos
+## Requisitos Previos
 
 - Node.js (v14 o superior)
 - npm o yarn
 - Postman (para pruebas)
 
-## 🔧 Instalación
+## Instalación
 
 1. Instalar dependencias:
 ```bash
@@ -40,7 +40,7 @@ npm run dev
 
 El servidor se ejecutará en `http://localhost:3000`
 
-## 📚 Endpoints de la API
+## Endpoints de la API
 
 ### 1. Página de Inicio
 - **GET** `/`
@@ -103,11 +103,6 @@ El servidor se ejecutará en `http://localhost:3000`
 - **GET** `/api/users/profile`
 - **Requiere autenticación** (Bearer Token)
 
-**Headers:**
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
-
 **Respuesta exitosa (200):**
 ```json
 {
@@ -145,7 +140,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 }
 ```
 
-## 🧪 Pruebas con Postman
+## Pruebas con Postman
 
 ### Usuario de Prueba Pre-registrado:
 - **Email:** `demo@example.com`
@@ -185,22 +180,19 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
      - Key: `Authorization`
      - Value: `Bearer TU_TOKEN_AQUI`
 
-## 🔒 Seguridad
+## Seguridad
 
-- ✅ Contraseñas hasheadas con bcrypt (salt rounds: 10)
-- ✅ JWT con expiración configurable (24h por defecto)
-- ✅ Validación de datos de entrada
-- ✅ Contraseñas nunca se devuelven en las respuestas
-- ✅ Protección contra usuarios duplicados
+- Contraseñas hasheadas con bcrypt (salt rounds: 10)
+- JWT con expiración configurable (24h por defecto)
+- Validación de datos de entrada
+- Contraseñas nunca se devuelven en las respuestas
+- Protección contra usuarios duplicados
 
-## 🗄️ Base de Datos
+## Base de Datos
 
 Actualmente usa una base de datos en memoria para demostración. Para producción, se puede migrar fácilmente a:
-- MongoDB (con Mongoose)
-- PostgreSQL (con Sequelize o Prisma)
-- MySQL (con Sequelize)
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 JWT login/
@@ -222,38 +214,3 @@ JWT login/
 ├── server.js                 # Punto de entrada
 └── README.md
 ```
-
-## 🎯 Códigos de Estado HTTP
-
-- `200` - Éxito
-- `201` - Recurso creado
-- `400` - Solicitud incorrecta
-- `401` - No autenticado
-- `403` - Token inválido
-- `404` - No encontrado
-- `409` - Conflicto (usuario duplicado)
-- `500` - Error del servidor
-
-## 🚧 Próximas Mejoras
-
-- [ ] Integración con base de datos real
-- [ ] Refresh tokens
-- [ ] Recuperación de contraseña
-- [ ] Roles y permisos
-- [ ] Rate limiting
-- [ ] Logs de auditoría
-- [ ] Interfaz gráfica (Frontend)
-
-## 📝 Notas
-
-- El token JWT expira en 24 horas por defecto
-- La contraseña debe tener al menos 6 caracteres
-- El formato de email es validado
-
-## 👤 Autor
-
-Proyecto de demostración para autenticación JWT
-
-## 📄 Licencia
-
-ISC
