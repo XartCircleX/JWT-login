@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JWT Auth - Demo Frontend</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #667eea;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px;
+      background: #f5f5f5;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .tab.active {
+      background: #667eea;
+      color: white;
+    }
+
+    .form-section {
+      display: none;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    button[type="submit"]:hover {
+      transform: translateY(-2px);
+    }
+
+    button[type="submit"]:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .alert {
+      padding: 12px 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .alert-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .alert-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .dashboard {
+      display: none;
+    }
+
+    .dashboard.active {
+      display: block;
+    }
+
+    .user-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .user-card h3 {
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    .user-card p {
+      opacity: 0.9;
+      margin-bottom: 5px;
+    }
+
+    .user-info {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .user-info p {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .user-info strong {
+      color: #667eea;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .users-list {
+      max-height: 300px;
+      overflow-y: auto;
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .user-item {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .user-item h4 {
+      color: #667eea;
+      margin-bottom: 5px;
+    }
+
+    .user-item p {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #667eea;
+    }
+
+    .demo-credentials {
+      background: #e7f3ff;
+      border: 1px solid #b3d9ff;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .demo-credentials p {
+      margin: 5px 0;
+      font-size: 13px;
+      color: #004085;
+    }
+
+    .demo-credentials strong {
+      color: #0066cc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 JWT Authentication</h1>
+    <p class="subtitle">Sistema de autenticación seguro con JSON Web Tokens</p>
+
+    <!-- Mensajes de alerta -->
+    <div id="alert" style="display: none;"></div>
+
+    <!-- Sección de autenticación -->
+    <div id="auth-section">
+      <div class="demo-credentials">
+        <p><strong>👤 Usuario de prueba:</strong></p>
+        <p><strong>Email:</strong> demo@example.com</p>
+        <p><strong>Password:</strong> password123</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('login')">Iniciar Sesión</button>
+        <button class="tab" onclick="switchTab('register')">Registrarse</button>
+      </div>
+
+      <!-- Formulario de Login -->
+      <div id="login-form" class="form-section active">
+        <h2>Iniciar Sesión</h2>
+        <form onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" required value="demo@example.com">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Contraseña</label>
+            <input type="password" id="login-password" required value="password123">
+          </div>
+          <button type="submit">Iniciar Sesión</button>
+        </form>
+      </div>
+
+      <!-- Formulario de Registro -->
+      <div id="register-form" class="form-section">
+        <h2>Crear Cuenta</h2>
+        <form onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label for="register-username">Nombre de Usuario</label>
+            <input type="text" id="register-username" required>
+          </div>
+          <div class="form-group">
+            <label for="register-email">Email</label>
+            <input type="email" id="register-email" required>
+          </div>
+          <div class="form-group">
+            <label for="register-password">Contraseña</label>
+            <input type="password" id="register-password" required minlength="6">
+          </div>
+          <button type="submit">Registrarse</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Dashboard (después de login) -->
+    <div id="dashboard" class="dashboard">
+      <div class="user-card">
+        <h3 id="user-name">Cargando...</h3>
+        <p id="user-email"></p>
+      </div>
+
+      <div class="user-info">
+        <p><strong>ID:</strong> <span id="user-id"></span></p>
+        <p><strong>Creado:</strong> <span id="user-created"></span></p>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="loadAllUsers()">Ver Todos los Usuarios</button>
+        <button class="btn btn-danger" onclick="handleLogout()">Cerrar Sesión</button>
+      </div>
+
+      <div id="users-list-container" style="margin-top: 20px; display: none;">
+        <h3 style="margin-bottom: 15px; color: #333;">Lista de Usuarios</h3>
+        <div id="users-list" class="users-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:3000/api';
+
+    // Verificar si ya está autenticado al cargar
+    window.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        loadProfile();
+      }
+    });
+
+    function switchTab(tab) {
+      // Cambiar tabs activas
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
+      
+      if (tab === 'login') {
+        document.querySelectorAll('.tab')[0].classList.add('active');
+        document.getElementById('login-form').classList.add('active');
+      } else {
+        document.querySelectorAll('.tab')[1].classList.add('active');
+        document.getElementById('register-form').classList.add('active');
+      }
+
+      hideAlert();
+    }
+
+    async function handleLogin(event) {
+      event.preventDefault();
+      
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      try {
+        const response = await fetch(`${API_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          showAlert('¡Login exitoso! Bienvenido ' + data.user.username, 'success');
+          setTimeout(() => showDashboard(data.user), 1000);
+        } else {
+          showAlert(data.message, 'error');
+        }
+      } catch (error) {
+        showAlert('Error de conexión con el servidor', 'error');
+      }
+    }
+
+    async function handleRegister(event) {
+      event.preventDefault();
+      
+      const username = document.getElementById('register-username').value;
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+
+      try {
+        const response = await fetch(`${API_URL}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          showAlert('¡Registro exitoso! Bienvenido ' + data.user.username, 'success');
+          setTimeout(() => showDashboard(data.user), 1000);
+        } else {
+          showAlert(data.message, 'error');
+        }
+      } catch (error) {
+        showAlert('Error de conexión con el servidor', 'error');
+      }
+    }
+
+    async function loadProfile() {
+      const token = localStorage.getItem('token');
+      
+      try {
+        const response = await fetch(`${API_URL}/users/profile`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showDashboard(data.user);
+        } else {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          showAlert('Sesión expirada. Por favor, inicia sesión nuevamente.', 'error');
+        }
+      } catch (error) {
+        showAlert('Error al cargar el perfil', 'error');
+      }
+    }
+
+    async function loadAllUsers() {
+      const token = localStorage.getItem('token');
+      const container = document.getElementById('users-list-container');
+      const list = document.getElementById('users-list');
+      
+      container.style.display = 'block';
+      list.innerHTML = '<div class="loading">Cargando usuarios...</div>';
+
+      try {
+        const response = await fetch(`${API_URL}/users`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          if (data.users.length === 0) {
+            list.innerHTML = '<p style="text-align: center; color: #666;">No hay usuarios registrados</p>';
+          } else {
+            list.innerHTML = data.users.map(user => `
+              <div class="user-item">
+                <h4>${user.username}</h4>
+                <p>📧 ${user.email}</p>
+                <p>🆔 ID: ${user.id}</p>
+                <p>📅 Creado: ${new Date(user.createdAt).toLocaleDateString('es-ES')}</p>
+              </div>
+            `).join('');
+          }
+        } else {
+          list.innerHTML = '<p style="text-align: center; color: red;">Error al cargar usuarios</p>';
+        }
+      } catch (error) {
+        list.innerHTML = '<p style="text-align: center; color: red;">Error de conexión</p>';
+      }
+    }
+
+    function showDashboard(user) {
+      document.getElementById('auth-section').style.display = 'none';
+      document.getElementById('dashboard').classList.add('active');
+      
+      document.getElementById('user-name').textContent = user.username;
+      document.getElementById('user-email').textContent = user.email;
+      document.getElementById('user-id').textContent = user.id;
+      document.getElementById('user-created').textContent = new Date(user.createdAt).toLocaleString('es-ES');
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
+      document.getElementById('auth-section').style.display = 'block';
+      document.getElementById('dashboard').classList.remove('active');
+      document.getElementById('users-list-container').style.display = 'none';
+      
+      showAlert('Sesión cerrada exitosamente', 'success');
+      
+      // Limpiar formularios
+      document.getElementById('login-email').value = 'demo@example.com';
+      document.getElementById('login-password').value = 'password123';
+    }
+
+    function showAlert(message, type) {
+      const alert = document.getElementById('alert');
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+      alert.style.display = 'block';
+      
+      setTimeout(() => {
+        alert.style.display = 'none';
+      }, 5000);
+    }
+
+    function hideAlert() {
+      document.getElementById('alert').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
